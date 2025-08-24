@@ -11,3 +11,5 @@ sql_app.db
 alembic/
 
 alembic.ini
+
+.ruff_cache/

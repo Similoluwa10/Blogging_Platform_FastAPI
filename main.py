@@ -1,61 +1,92 @@
 from fastapi import FastAPI
 from db.database import init_db_connection
 from contextlib import asynccontextmanager
+from db.models import User
 from core import services
+from core.requests import CreatUserRequest, UpdateUserRequest, CreateBlogpostRequest, UpdateBlogpostRequest
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await init_db_connection()
     yield
 
+
 app = FastAPI(lifespan=lifespan)
-    
-#routes: User
+
+
+# routes: User
 @app.post("/user")
-def createUser():
-    return
+def createUser(user: CreatUserRequest):
+    user = services.create_user(user)
+    
+    if user:
+        return{
+            "message": "user successfully created"
+        }
+    
+    return{
+        "message": "error in user creation"
+    }
 
 @app.get("/user/{id}")
-def getUser(id):
-    return
+def getUser(id: int):
+    user = services.get_user(id)
+    if user:
+        return {
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "blogposts": user.blog_posts,
+        }
+    return{
+        "message": "error in retrieving user"
+    }
 
 @app.get("/users")
 def getAllUsers():
-    return
-
+    users = services.get_all_users()
+    if users:
+        return users
+    return     
+        
 @app.put("/user/{id}")
-def editUser(id):
-    return
+def editUser(id: int, userUpdate: UpdateUserRequest):
+    user = services.update_user(id, userUpdate)
+    return user
 
 @app.delete("/user/{id}")
-def deleteUser(id):
-    return
+def deleteUser(id: int):
+    response = services.delete__user(id)
+    return response
 
 
-#routes: BlogPost
+
+# routes: BlogPost
 @app.post("/blog")
-def createBlogPost():
-    return
+def createBlogPost(blogpost: CreateBlogpostRequest):
+    blogpost = services.create_blogpost(blogpost)
+    return blogpost
 
 @app.get("/blog/{id}")
 def getBlogPostById(id: int):
-    pass
+    blogpost = services.get_blogpost(id)
+    return blogpost
 
-@app.get("/blog")
-def getBlogPostsByFilter():
-    return
+# @app.get("/blog")
+# def getBlogPostsByFilter():
+#     return
 
 @app.get("/blogs")
 def getAllBlogPosts():
-    return
+    blogposts = services.get_all_blogposts()
+    return blogposts
 
-@app.put("/blog")
-def editBlogPost():
-    return
+@app.put("/blog/{id}")
+def editBlogPost(id: int, blogpostUpdate: UpdateBlogpostRequest):
+    blogpost = services.update_blogpost(id, blogpostUpdate)
+    return blogpost
 
-@app.delete("/blog")
-def deleteBlogPost():
-    return
-
-
-
+@app.delete("/blog/{id}")
+def deleteBlogPost(id: int):
+    response = services.delete_blogpost(id)
+    return response
