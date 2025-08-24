@@ -1,16 +1,23 @@
 from fastapi import FastAPI
+from db.database import init_db_connection
+from contextlib import asynccontextmanager
+from core import services
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await init_db_connection()
+    yield
 
-
+app = FastAPI(lifespan=lifespan)
+    
 #routes: User
 @app.post("/user")
 def createUser():
-    pass
+    return
 
 @app.get("/user/{id}")
 def getUser(id):
-    pass
+    return
 
 @app.get("/users")
 def getAllUsers():
@@ -49,3 +56,6 @@ def editBlogPost():
 @app.delete("/blog")
 def deleteBlogPost():
     return
+
+
+

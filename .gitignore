@@ -5,3 +5,9 @@ znotes.txt
 .env
 
 __pycache__/
+
+sql_app.db
+
+alembic/
+
+alembic.ini
