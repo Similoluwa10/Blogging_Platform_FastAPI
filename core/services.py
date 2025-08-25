@@ -9,16 +9,40 @@ from core.requests import (
 
 
 def create_user(userCreate: CreatUserRequest):
-    # create user in database
-    try:
+    
+    #check if username or email already exists    
+    usernameExists = session.query(User).filter_by(username=userCreate.username)
+    emailExists = session.query(User).filter_by(email=userCreate.email)
+    if usernameExists:
+        print(usernameExists)
+        return{
+            "message": "username already exists"
+        }
+        
+    if emailExists:
+        return{
+            "message": "email already exists"
+        }
+        
+   
+    #if username and email are unique, attempt to insert into database
+    try:        
         user = User(username=userCreate.username, email=userCreate.email, password=userCreate.password)
         session.add(user)
     except:
+        #rollback if operation is unsuccessful
         session.rollback()
         raise
     else:
         session.commit()
-        return user
+        if user:
+            return{
+                "message": "user created successfully"
+            }
+            
+    return{
+        "message": "user creation unsuccessful"
+    }
 
 
 def get_user(id):

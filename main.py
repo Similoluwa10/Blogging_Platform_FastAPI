@@ -17,16 +17,8 @@ app = FastAPI(lifespan=lifespan)
 # routes: User
 @app.post("/user")
 def createUser(user: CreatUserRequest):
-    user = services.create_user(user)
-    
-    if user:
-        return{
-            "message": "user successfully created"
-        }
-    
-    return{
-        "message": "error in user creation"
-    }
+    response = services.create_user(user)    
+    return response
 
 @app.get("/user/{id}")
 def getUser(id: int):
