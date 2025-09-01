@@ -16,12 +16,12 @@ app = FastAPI(lifespan=lifespan)
 
 # routes: User
 @app.post("/user")
-def createUser(user: CreatUserRequest):
+def create_user(user: CreatUserRequest):
     response = services.create_user(user)    
     return response
 
 @app.get("/user/{id}")
-def getUser(id: int):
+def get_user(id: int):
     user = services.get_user(id)
     if user:
         return {
@@ -35,50 +35,48 @@ def getUser(id: int):
     }
 
 @app.get("/users")
-def getAllUsers():
+def get_all_users():
     users = services.get_all_users()
     if users:
         return users
     return     
         
 @app.put("/user/{id}")
-def editUser(id: int, userUpdate: UpdateUserRequest):
-    user = services.update_user(id, userUpdate)
-    return user
+def edit_user(id: int, userUpdate: UpdateUserRequest):
+    response = services.update_user(id, userUpdate)
+    return response
 
 @app.delete("/user/{id}")
-def deleteUser(id: int):
+def delete_user(id: int):
     response = services.delete__user(id)
     return response
 
 
-
 # routes: BlogPost
 @app.post("/blog")
-def createBlogPost(blogpost: CreateBlogpostRequest):
-    blogpost = services.create_blogpost(blogpost)
-    return blogpost
+def create_blogpost(blogpost: CreateBlogpostRequest):
+    response = services.create_blogpost(blogpost)
+    return response
 
 @app.get("/blog/{id}")
-def getBlogPostById(id: int):
-    blogpost = services.get_blogpost(id)
-    return blogpost
-
-# @app.get("/blog")
-# def getBlogPostsByFilter():
-#     return
+def get_blogpost(id: int):
+    response = services.get_blogpost(id)
+    return response
 
 @app.get("/blogs")
-def getAllBlogPosts():
-    blogposts = services.get_all_blogposts()
-    return blogposts
+def get_all_blogposts():
+    response = services.get_all_blogposts()
+    return response
 
 @app.put("/blog/{id}")
-def editBlogPost(id: int, blogpostUpdate: UpdateBlogpostRequest):
-    blogpost = services.update_blogpost(id, blogpostUpdate)
-    return blogpost
+def edit_blogpost(id: int, blogpostUpdate: UpdateBlogpostRequest):
+    response = services.update_blogpost(id, blogpostUpdate)
+    return response
 
 @app.delete("/blog/{id}")
-def deleteBlogPost(id: int):
+def delete_blogpost(id: int):
     response = services.delete_blogpost(id)
     return response
+
+#to add response model to controllers
+#create blogpost and user response models

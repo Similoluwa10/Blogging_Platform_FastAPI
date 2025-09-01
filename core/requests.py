@@ -8,10 +8,11 @@ class CreatUserRequest(BaseModel):
     password: str
 
 
+#update request fields are optional
 class UpdateUserRequest(BaseModel):
-    username: str
-    email: EmailStr
-    password: str
+    username: Optional[str]
+    email: Optional[EmailStr]
+    password: Optional[str]
 
 
 class CreateBlogpostRequest(BaseModel):

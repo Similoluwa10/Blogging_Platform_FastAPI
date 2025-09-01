@@ -11,8 +11,8 @@ from core.requests import (
 def create_user(userCreate: CreatUserRequest):
     
     #check if username or email already exists    
-    usernameExists = session.query(User).filter_by(username=userCreate.username)
-    emailExists = session.query(User).filter_by(email=userCreate.email)
+    usernameExists = session.query(User).filter_by(username=userCreate.username).first()
+    emailExists = session.query(User).filter_by(email=userCreate.email).first()
     if usernameExists:
         print(usernameExists)
         return{
@@ -48,16 +48,11 @@ def create_user(userCreate: CreatUserRequest):
 def get_user(id):
     #query database
     user = session.query(User).get(id)
+    
+    # if not user.blog_posts:
+    #     user.blog_posts = ["No blogposts yet"]
+        
     return user
-
-
-def get_all_users():
-    try: 
-        users: list[User] = session.query(User).all()
-    except:
-        raise
-    else:
-        return users
 
 
 def update_user(id, userUpdate: UpdateUserRequest):    
@@ -72,6 +67,15 @@ def update_user(id, userUpdate: UpdateUserRequest):
 
             session.commit()
             return user
+
+
+def get_all_users():
+    try: 
+        users: list[User] = session.query(User).all()
+    except:
+        raise
+    else:
+        return users
 
 
 def delete__user(id):
@@ -103,7 +107,9 @@ def create_blogpost(blogpostCreate: CreateBlogpostRequest):
     
     else:
         session.commit()
-        return blogpost
+        return{
+            "message": "Blog post successfully created"
+        }
 
 
 def get_blogpost(id):
@@ -133,18 +139,22 @@ def update_blogpost(id, blogpostUpdate: UpdateBlogpostRequest):
     
     else:
         if blogpost:
-            blogpost.imageUrl = blogpostUpdate.imageUrl
+            blogpost.imageUrl = blogpostUpdate.imageUrl 
             blogpost.caption = blogpostUpdate.caption
             blogpost.article = blogpostUpdate.article
 
             session.commit()
 
             return blogpost
+        
+        return {
+            "message": "blogpost you want to edit does not exist!"
+        }
 
 
 def delete_blogpost(id):
     try: 
-        blogpost = session.query(BlogPost).get(id)
+        blogpost: BlogPost = session.query(BlogPost).get(id)
     except:
         raise
     else:
@@ -155,3 +165,6 @@ def delete_blogpost(id):
             return {
                 "message": "blogpost successfully deleted"
                     }
+        return{
+            "message": "blogpost you want to delete does not exist"
+        }

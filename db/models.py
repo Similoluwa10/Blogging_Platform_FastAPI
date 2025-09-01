@@ -2,8 +2,7 @@ from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, Text, UUID
 from sqlalchemy.orm import relationship
 from datetime import datetime
 import uuid
-from db.database import Base
-
+from db.database import Base, engine
 
 class User(Base):
     __tablename__ = "users"
@@ -19,10 +18,11 @@ class User(Base):
 class BlogPost(Base):
     __tablename__ = "blogposts"
 
-    id = Column(UUID, primary_key=True, default=uuid.uuid4)
+    id = Column(Integer(), primary_key=True)
     imageUrl = Column(String(50), nullable=True)
     caption = Column(String(50))
     article = Column(String(), nullable=False)
     created_at = Column(DateTime(), default=datetime.now)
     user_id = Column(Integer(), ForeignKey("users.id"))
     user = relationship("User", back_populates="blog_posts")
+    
